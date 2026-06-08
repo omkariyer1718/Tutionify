@@ -10,13 +10,17 @@ export function ExportTools() {
         <div className="border border-gray-200 rounded-lg p-4">
           <h4 className="font-medium text-gray-900 mb-1">Students Database</h4>
           <p className="text-xs text-gray-500 mb-4">Export all active and alumni students with contact details.</p>
-          <button className="text-sm font-medium text-indigo-600 hover:text-indigo-900">Download CSV</button>
+          <a href="/api/export/students" download className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900">
+            Download CSV
+          </a>
         </div>
         
         <div className="border border-gray-200 rounded-lg p-4">
           <h4 className="font-medium text-gray-900 mb-1">Fee Records</h4>
           <p className="text-xs text-gray-500 mb-4">Export all fee records for the current academic year.</p>
-          <button className="text-sm font-medium text-indigo-600 hover:text-indigo-900">Download CSV</button>
+          <a href="/api/export/fees" download className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900">
+            Download CSV
+          </a>
         </div>
       </div>
     </div>
