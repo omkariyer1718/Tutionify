@@ -31,10 +31,18 @@ export default async function TimetablePage() {
     student_count: batchCounts.get(b.id) || 0
   }))
 
+  const { data: personalSlots } = await supabase
+    .from('personal_slots')
+    .select('*, schedules:personal_slot_schedules(*)')
+
   return (
     <div>
-      <PageHeader title="Timetable" description="Weekly schedule of all active batches" />
-      <TimetableClient batches={batchesWithCounts} textbooks={textbooks || []} />
+      <PageHeader title="Timetable" description="Weekly schedule of all active batches and personal slots" />
+      <TimetableClient 
+        batches={batchesWithCounts} 
+        textbooks={textbooks || []}
+        personalSlots={personalSlots || []}
+      />
     </div>
   )
 }

@@ -42,6 +42,22 @@ export interface BatchSchedule {
   duration_hours: number;
 }
 
+export interface PersonalSlot {
+  id: string;
+  title: string;
+  color_code: string;
+  created_at: string;
+}
+
+export interface PersonalSlotSchedule {
+  id: string;
+  personal_slot_id: string;
+  weekday: number;
+  start_time: string;
+  end_time: string;
+  duration_hours: number;
+}
+
 export interface Student {
   id: string;
   student_code: string;
@@ -135,8 +151,9 @@ export type FeeRecordInsert = Omit<FeeRecord, 'id' | 'created_at'>;
 export type AttendanceRecordInsert = Omit<AttendanceRecord, 'id' | 'created_at'>;
 
 export type ExamInsert = Omit<Exam, 'id' | 'created_at'>;
-
 export type ScoreRecordInsert = Omit<ScoreRecord, 'id' | 'created_at'>;
+export type PersonalSlotInsert = Omit<PersonalSlot, 'id' | 'created_at'>;
+export type PersonalSlotScheduleInsert = Omit<PersonalSlotSchedule, 'id' | 'duration_hours'>;
 
 // -----------------------------------------------------------------------------
 // Update Types (partial versions for PATCH / UPDATE operations)
@@ -165,7 +182,11 @@ export interface StudentWithBatch extends Student {
 export interface BatchWithTextbook extends Batch {
   textbook: Textbook;
   student_count?: number;
-  schedules?: BatchSchedule[];
+  schedules: BatchSchedule[];
+}
+
+export interface PersonalSlotWithSchedules extends PersonalSlot {
+  schedules: PersonalSlotSchedule[];
 }
 
 export interface FeeRecordWithStudent extends FeeRecord {
