@@ -12,7 +12,7 @@ interface PersonalSlotFormProps {
 
 export function PersonalSlotForm({ open, onClose }: PersonalSlotFormProps) {
   const [title, setTitle] = useState('')
-  const [colorCode, setColorCode] = useState(PRESET_COLORS[0].value)
+  const [colorCode, setColorCode] = useState<string>(PRESET_COLORS[0].value)
   const [schedules, setSchedules] = useState([{ weekday: 1, start_time: '16:00', end_time: '17:00' }])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
