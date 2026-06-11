@@ -38,6 +38,7 @@ export function StudentForm({ open, onClose, student, batches }: StudentFormProp
       setJoinDate(student?.join_date || new Date().toISOString().split('T')[0])
       setNotes(student?.notes || '')
       setError(null)
+      setLoading(false)
     }
   }, [open, student])
 
@@ -79,6 +80,7 @@ export function StudentForm({ open, onClose, student, batches }: StudentFormProp
       setError(res.error)
       setLoading(false)
     } else {
+      setLoading(false)
       onClose()
     }
   }
