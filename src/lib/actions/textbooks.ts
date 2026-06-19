@@ -92,8 +92,13 @@ export async function updateTextbook(
       return { success: false, error: error.message }
     }
 
+    // Force batch trigger to regenerate display names for all batches using this textbook
+    await supabase.from('batches').update({ textbook_id: id }).eq('textbook_id', id)
+
     revalidatePath('/textbooks')
     revalidatePath('/timetable')
+    revalidatePath('/students')
+    revalidatePath('/settings')
 
     return { success: true, data: textbook as Textbook }
   } catch (err) {
