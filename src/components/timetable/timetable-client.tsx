@@ -19,6 +19,7 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
   const [formOpen, setFormOpen] = useState(false)
   const [slotFormOpen, setSlotFormOpen] = useState(false)
   const [selectedBatch, setSelectedBatch] = useState<BatchWithTextbook | null>(null)
+  const [selectedSlot, setSelectedSlot] = useState<PersonalSlotWithSchedules | null>(null)
   const [initialDate, setInitialDate] = useState<{ weekday: number, start_time: string, end_time: string } | null>(null)
 
   const batchEvents = batches.flatMap(batch => {
@@ -64,9 +65,9 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
       setInitialDate(null)
       setFormOpen(true)
     } else if (props.type === 'personal_slot') {
-      if (confirm(`Delete personal slot "${props.slot.title}"?`)) {
-        await deletePersonalSlot(props.slot.id)
-      }
+      setSelectedSlot(props.slot)
+      setInitialDate(null)
+      setSlotFormOpen(true)
     }
   }
 
@@ -87,7 +88,11 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
       <div className="mb-4 flex justify-end gap-2">
         <button
-          onClick={() => setSlotFormOpen(true)}
+          onClick={() => {
+            setSelectedSlot(null)
+            setInitialDate(null)
+            setSlotFormOpen(true)
+          }}
           className="bg-white border border-indigo-600 text-indigo-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50"
         >
           Add Slot
@@ -136,6 +141,8 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
         <PersonalSlotForm
           open={slotFormOpen}
           onClose={() => setSlotFormOpen(false)}
+          slot={selectedSlot}
+          initialDate={initialDate}
         />
       )}
     </div>

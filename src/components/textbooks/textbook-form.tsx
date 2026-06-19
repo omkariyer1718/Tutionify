@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Check } from 'lucide-react'
 import { PRESET_COLORS, type Textbook, type TextbookInsert } from '@/types/database'
 
@@ -24,6 +24,16 @@ export function TextbookForm({
   )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (open) {
+      setSeriesName(textbook?.series_name ?? '')
+      setGrade(textbook?.grade ?? 1)
+      setColorCode(textbook?.color_code ?? PRESET_COLORS[0].value)
+      setError(null)
+      setLoading(false)
+    }
+  }, [open, textbook])
 
   if (!open) return null
 
