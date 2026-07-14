@@ -29,7 +29,8 @@ This project transforms that chaotic workflow into a streamlined, digital dashbo
 ## ✨ Key Features
 
 * **Multi-Tenant Architecture:** Built with secure Row Level Security (RLS). Every tutor who signs up via Google gets a completely blank, isolated database slice. No user can ever query or access another tutor's data.
-* **Interactive Timetable:** A visual weekly calendar built with FullCalendar. Tutors can block out personal time slots and visualize their teaching batches with color-coded tags.
+* **Interactive Timetable:** A visual weekly calendar built with FullCalendar. Tutors can visualize their teaching batches with dynamic color-coded tags and instantly detect scheduling conflicts.
+* **Flexible Personal Slots:** A relaxed scheduling feature that allows tutors to block out custom time slots on the calendar for personal activities or ad-hoc events. These slots are decoupled from the core student/textbook curriculum, ensuring personal commitments are tracked and never clash with official teaching batches.
 * **Student & Batch Management:** Add students, assign them to specific batches based on textbooks/grades, and track their parent contact information.
 * **Financial Tracking:** A dedicated fee management system that auto-generates monthly fee records based on student joining dates, allowing tutors to mark payments as paid/unpaid with a single click.
 * **Attendance & Analytics:** Track daily attendance per batch and manage exam scores to monitor student progression.
@@ -41,7 +42,7 @@ This project transforms that chaotic workflow into a streamlined, digital dashbo
 
 Tutionify is designed with a strict relational database to keep your records perfectly organized. When you first log in, follow this exact order to set up your dashboard:
 
-1. **📚 Add Textbooks First:** Go to the **Settings** page and add your Textbooks (e.g., "Sanskrit - Grade 9"). *Why? Because every teaching batch must be linked to a specific curriculum.*
+1. **📚 Add Textbooks First:** Go to the **Settings** page and add your Textbooks (e.g., "NCERT Mathematics - Grade 9"). *Why? Because every teaching batch must be linked to a specific curriculum.*
 2. **📅 Create Batches:** Go to the **Timetable** page and click "Add Batch". You will now be able to select the Textbook you just created and assign a time slot.
 3. **🎓 Enroll Students:** Go to the **Students** page and add a student. You can now successfully assign them to the Batch you created in step 2!
 
