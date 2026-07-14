@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="public/favicon.ico" alt="Logo" width="80" height="80">
   <h1 align="center">Tutionify</h1>
   <p align="center">
     <strong>A Multi-Tenant SaaS Platform for Independent Tutors</strong>
@@ -35,6 +34,18 @@ This project transforms that chaotic workflow into a streamlined, digital dashbo
 * **Financial Tracking:** A dedicated fee management system that auto-generates monthly fee records based on student joining dates, allowing tutors to mark payments as paid/unpaid with a single click.
 * **Attendance & Analytics:** Track daily attendance per batch and manage exam scores to monitor student progression.
 * **Data Portability:** Tutors can export their entire student database and financial records instantly to formatted CSV files for local backups.
+
+---
+
+## 📖 How to Use (The Workflow)
+
+Tutionify is designed with a strict relational database to keep your records perfectly organized. When you first log in, follow this exact order to set up your dashboard:
+
+1. **📚 Add Textbooks First:** Go to the **Settings** page and add your Textbooks (e.g., "Sanskrit - Grade 9"). *Why? Because every teaching batch must be linked to a specific curriculum.*
+2. **📅 Create Batches:** Go to the **Timetable** page and click "Add Batch". You will now be able to select the Textbook you just created and assign a time slot.
+3. **🎓 Enroll Students:** Go to the **Students** page and add a student. You can now successfully assign them to the Batch you created in step 2!
+
+*(If you try to add a student before creating a batch, or a batch before creating a textbook, the dropdowns will be empty!)*
 
 ---
 
