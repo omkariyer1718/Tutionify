@@ -6,29 +6,59 @@ import { useRouter } from 'next/navigation'
 import { BookOpen, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
+  const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setSuccess(null)
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    if (isSignUp) {
+      if (password !== confirmPassword) {
+        setError('Passwords do not match')
+        setLoading(false)
+        return
+      }
 
-    if (error) {
-      setError(error.message)
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      })
+
+      if (error) {
+        setError(error.message)
+      } else if (data.session === null) {
+        setSuccess('Account created! Please check your email to confirm your account.')
+        setIsSignUp(false)
+        setPassword('')
+        setConfirmPassword('')
+      } else {
+        router.push('/')
+        router.refresh()
+      }
       setLoading(false)
     } else {
-      router.push('/')
-      router.refresh()
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+      } else {
+        router.push('/')
+        router.refresh()
+      }
     }
   }
 
@@ -61,7 +91,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleAuth} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email
@@ -92,20 +122,69 @@ export default function LoginPage() {
               />
             </div>
 
+            {isSignUp && (
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="••••••••"
+                />
+              </div>
+            )}
+
             {error && (
               <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
                 {error}
+              </div>
+            )}
+            
+            {success && (
+              <div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                {success}
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-2 transition-colors"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? 'Signing in...' : 'Sign in with Email'}
+              {isSignUp ? 'Create Account' : 'Sign in with Email'}
             </button>
+            
+            <div className="text-center text-sm text-gray-600 mt-4">
+              {isSignUp ? (
+                <>
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => { setIsSignUp(false); setError(null); setSuccess(null); }}
+                    className="text-indigo-600 hover:text-indigo-500 font-medium"
+                  >
+                    Sign in
+                  </button>
+                </>
+              ) : (
+                <>
+                  New to Tutionify?{' '}
+                  <button
+                    type="button"
+                    onClick={() => { setIsSignUp(true); setError(null); setSuccess(null); }}
+                    className="text-indigo-600 hover:text-indigo-500 font-medium"
+                  >
+                    Sign up
+                  </button>
+                </>
+              )}
+            </div>
           </form>
 
           <div className="mt-6">
