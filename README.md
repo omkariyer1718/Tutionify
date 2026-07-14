@@ -92,7 +92,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## 👨‍💻 Author
 
 **Omkar Iyer**
-- LinkedIn: [Your LinkedIn Profile URL here]
+- LinkedIn: www.linkedin.com/in/omkariyer
 - GitHub: [@omkariyer1718](https://github.com/omkariyer1718)
 
 *Designed and engineered as a real-world utility project.*
