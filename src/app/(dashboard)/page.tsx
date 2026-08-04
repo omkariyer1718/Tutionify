@@ -23,7 +23,7 @@ export default async function DashboardPage() {
     .from('batch_schedules')
     .select('*, batch:batches!inner(*, textbook:textbooks(*))')
     .eq('weekday', todayWeekday)
-    .eq('batch.is_active', true)
+
     .order('start_time', { ascending: true })
 
   // 2. For each today's schedule, count active students in that batch
@@ -54,7 +54,7 @@ export default async function DashboardPage() {
   const { count: activeBatchesCount } = await supabase
     .from('batches')
     .select('*', { count: 'exact', head: true })
-    .eq('is_active', true)
+
 
   const { data: paidFees } = await supabase
     .from('fee_records')

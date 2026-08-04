@@ -8,7 +8,7 @@ export default async function TimetablePage() {
   const { data: batches } = await supabase
     .from('batches')
     .select('*, textbook:textbooks(*), schedules:batch_schedules(*)')
-    .eq('is_active', true)
+
 
   const { data: textbooks } = await supabase
     .from('textbooks')

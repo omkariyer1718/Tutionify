@@ -8,7 +8,7 @@ export default async function AttendancePage() {
   const { data: batches } = await supabase
     .from('batches')
     .select('*, textbook:textbooks(*)')
-    .eq('is_active', true)
+
     .order('display_name')
 
   return (

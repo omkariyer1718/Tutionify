@@ -30,8 +30,8 @@ export async function processPromotions(promotionList: Array<{ batch_id: string,
 
   for (const promo of promotionList) {
     if (promo.action === 'pass_out') {
-      await supabase.from('batches').update({ is_active: false }).eq('id', promo.batch_id)
-      await supabase.from('students').update({ is_passed_out: true }).eq('batch_id', promo.batch_id)
+      await supabase.from('students').update({ is_passed_out: true, batch_id: null }).eq('batch_id', promo.batch_id)
+      await supabase.from('batches').delete().eq('id', promo.batch_id)
       await supabase.from('promotion_history').insert({
         batch_id: promo.batch_id,
         action: 'pass_out',
@@ -63,7 +63,7 @@ export async function undoPromotion(historyId: string) {
   if (!history) return { success: false, error: 'History not found' }
 
   if (history.action === 'pass_out') {
-    await supabase.from('batches').update({ is_active: true }).eq('id', history.batch_id)
+    // Cannot fully undo pass_out since batch was hard deleted
     await supabase.from('students').update({ is_passed_out: false }).eq('batch_id', history.batch_id)
   } else if (history.action === 'promote' && history.old_textbook_id) {
     await supabase.from('batches').update({ textbook_id: history.old_textbook_id }).eq('id', history.batch_id)

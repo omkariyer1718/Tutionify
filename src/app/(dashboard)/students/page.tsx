@@ -11,7 +11,7 @@ export default async function StudentsPage() {
     supabase
       .from('batches')
       .select('*, textbook:textbooks(*)')
-      .eq('is_active', true)
+
       .order('display_name', { ascending: true }),
   ])
 

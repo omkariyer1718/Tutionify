@@ -29,7 +29,6 @@ export interface Batch {
   textbook_id: string;
   suffix: string;
   display_name: string;
-  is_active: boolean;
   created_at: string;
 }
 

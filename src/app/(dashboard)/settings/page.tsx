@@ -22,7 +22,7 @@ export default async function SettingsPage() {
   const { data: batches } = await supabase
     .from('batches')
     .select('*, textbook:textbooks(*)')
-    .eq('is_active', true)
+
     .order('display_name')
 
   const { data: textbooks } = await supabase
