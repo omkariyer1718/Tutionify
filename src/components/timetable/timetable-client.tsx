@@ -92,7 +92,7 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
           onClick={() => setIsExtendedView(!isExtendedView)}
           className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50"
         >
-          {isExtendedView ? 'Default View (7 AM - 9 PM)' : 'Extend Calendar (24h)'}
+          {isExtendedView ? 'Default View (7 AM - 10 PM)' : 'Extend Calendar (24h)'}
         </button>
         <div className="flex gap-2">
           <button
@@ -125,7 +125,7 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
           headerToolbar={false}
           allDaySlot={false}
           slotMinTime={isExtendedView ? "00:00:00" : "07:00:00"}
-          slotMaxTime={isExtendedView ? "24:00:00" : "21:00:00"}
+          slotMaxTime={isExtendedView ? "24:00:00" : "22:00:00"}
           slotDuration="00:30:00"
           height="auto"
           events={events}
