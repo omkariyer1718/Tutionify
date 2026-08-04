@@ -122,14 +122,6 @@ export async function deleteTextbook(
     const { error } = await supabase.from('textbooks').delete().eq('id', id)
 
     if (error) {
-      // FK constraint failure when batches still reference this textbook
-      if (error.code === '23503') {
-        return {
-          success: false,
-          error:
-            'Cannot delete this textbook because it has batches assigned to it. Remove all batches first.',
-        }
-      }
       return { success: false, error: error.message }
     }
 

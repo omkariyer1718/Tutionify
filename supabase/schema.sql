@@ -30,14 +30,12 @@ CREATE TABLE textbooks (
 -- Batches
 CREATE TABLE batches (
   id             UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  textbook_id    UUID NOT NULL REFERENCES textbooks(id) ON DELETE RESTRICT,
-  suffix         TEXT NOT NULL DEFAULT 'A',
+  textbook_id    UUID NOT NULL REFERENCES textbooks(id) ON DELETE CASCADE,
   display_name   TEXT,
   weekday        INTEGER NOT NULL CHECK (weekday >= 0 AND weekday <= 6),
   start_time     TIME NOT NULL,
   end_time       TIME NOT NULL,
   duration_hours NUMERIC GENERATED ALWAYS AS (EXTRACT(EPOCH FROM (end_time - start_time)) / 3600) STORED,
-  is_active      BOOLEAN DEFAULT true,
   created_at     TIMESTAMPTZ DEFAULT now(),
 
   CHECK (end_time > start_time)
@@ -49,7 +47,7 @@ CREATE TABLE students (
   student_code   TEXT UNIQUE,
   full_name      TEXT NOT NULL,
   school_name    TEXT,
-  batch_id       UUID REFERENCES batches(id) ON DELETE RESTRICT,
+  batch_id       UUID REFERENCES batches(id) ON DELETE SET NULL,
   monthly_fee    NUMERIC NOT NULL DEFAULT 0,
   class_mode     class_mode_type DEFAULT 'offline',
   student_phone  TEXT,
@@ -79,7 +77,7 @@ CREATE TABLE fee_records (
 CREATE TABLE attendance_records (
   id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id      UUID NOT NULL REFERENCES students(id) ON DELETE RESTRICT,
-  batch_id        UUID NOT NULL REFERENCES batches(id) ON DELETE RESTRICT,
+  batch_id        UUID NOT NULL REFERENCES batches(id) ON DELETE CASCADE,
   attendance_date DATE NOT NULL,
   is_present      BOOLEAN DEFAULT true,
   created_at      TIMESTAMPTZ DEFAULT now(),
@@ -134,7 +132,7 @@ CREATE TRIGGER trg_textbook_display_name
   FOR EACH ROW
   EXECUTE FUNCTION generate_textbook_display_name();
 
--- Auto-generate batch display_name: "Textbook Display Batch X"
+-- Auto-generate batch display_name: "Textbook Display"
 CREATE OR REPLACE FUNCTION generate_batch_display_name()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -144,7 +142,7 @@ BEGIN
     FROM textbooks
    WHERE id = NEW.textbook_id;
 
-  NEW.display_name := v_textbook_display || ' Batch ' || NEW.suffix;
+  NEW.display_name := v_textbook_display;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -168,27 +166,7 @@ CREATE TRIGGER trg_student_code
   FOR EACH ROW
   EXECUTE FUNCTION generate_student_code();
 
--- Auto-assign batch suffix (A, B, C, ...) based on existing batches for the textbook
-CREATE OR REPLACE FUNCTION auto_generate_batch_suffix()
-RETURNS TRIGGER AS $$
-DECLARE
-  v_count INTEGER;
-BEGIN
-  IF NEW.suffix = 'A' THEN
-    SELECT COUNT(*) INTO v_count
-      FROM batches
-     WHERE textbook_id = NEW.textbook_id;
 
-    NEW.suffix := CHR(65 + v_count); -- A=65, B=66, ...
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_batch_suffix
-  BEFORE INSERT ON batches
-  FOR EACH ROW
-  EXECUTE FUNCTION auto_generate_batch_suffix();
 
 -- Prevent overlapping batch times on the same weekday
 CREATE OR REPLACE FUNCTION check_batch_time_overlap()
@@ -199,7 +177,6 @@ BEGIN
       FROM batches
      WHERE weekday    = NEW.weekday
        AND id        != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::UUID)
-       AND is_active  = true
        AND start_time < NEW.end_time
        AND end_time   > NEW.start_time
   ) THEN
@@ -244,4 +221,4 @@ CREATE INDEX idx_students_active_batch    ON students(batch_id)                 
 CREATE INDEX idx_students_passed_out      ON students(is_passed_out);
 CREATE INDEX idx_fee_records_lookup       ON fee_records(student_id, year, month);
 CREATE INDEX idx_attendance_student_date  ON attendance_records(student_id, attendance_date);
-CREATE INDEX idx_batches_active_weekday   ON batches(weekday)                      WHERE is_active;
+CREATE INDEX idx_batches_active_weekday   ON batches(weekday);

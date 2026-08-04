@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createBatch, updateBatch, archiveBatch } from '@/lib/actions/batches'
+import { createBatch, updateBatch, deleteBatch } from '@/lib/actions/batches'
 import { WEEKDAYS } from '@/types/database'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
 import type { BatchWithTextbook, Textbook } from '@/types/database'
@@ -92,12 +92,12 @@ export function BatchForm({ open, onClose, batch, textbooks, initialDate }: Batc
     setLoading(false)
   }
 
-  const handleArchive = async () => {
+  const handleDelete = async () => {
     if (!batch) return
-    if (!confirm('Are you sure you want to archive this batch?')) return
+    if (!confirm('Are you sure you want to delete this batch? This cannot be undone.')) return
     
     setLoading(true)
-    const res = await archiveBatch(batch.id)
+    const res = await deleteBatch(batch.id)
     if (res.error) setError(res.error)
     else onClose()
     setLoading(false)
@@ -199,11 +199,11 @@ export function BatchForm({ open, onClose, batch, textbooks, initialDate }: Batc
             {batch ? (
               <button
                 type="button"
-                onClick={handleArchive}
+                onClick={handleDelete}
                 disabled={loading}
                 className="text-sm font-medium text-red-600 hover:text-red-700"
               >
-                Archive
+                Delete
               </button>
             ) : <div />}
             

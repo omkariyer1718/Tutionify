@@ -21,6 +21,7 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
   const [selectedBatch, setSelectedBatch] = useState<BatchWithTextbook | null>(null)
   const [selectedSlot, setSelectedSlot] = useState<PersonalSlotWithSchedules | null>(null)
   const [initialDate, setInitialDate] = useState<{ weekday: number, start_time: string, end_time: string } | null>(null)
+  const [isExtendedView, setIsExtendedView] = useState(false)
 
   const batchEvents = batches.flatMap(batch => {
     if (!batch.schedules) return []
@@ -86,8 +87,15 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-      <div className="mb-4 flex justify-end gap-2">
+      <div className="mb-4 flex justify-between gap-2">
         <button
+          onClick={() => setIsExtendedView(!isExtendedView)}
+          className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50"
+        >
+          {isExtendedView ? 'Default View (7 AM - 9 PM)' : 'Extend Calendar (24h)'}
+        </button>
+        <div className="flex gap-2">
+          <button
           onClick={() => {
             setSelectedSlot(null)
             setInitialDate(null)
@@ -107,6 +115,7 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
         >
           Add Batch
         </button>
+        </div>
       </div>
 
       <div className="timetable-container">
@@ -115,8 +124,8 @@ export function TimetableClient({ batches, textbooks, personalSlots = [] }: Time
           initialView="timeGridWeek"
           headerToolbar={false}
           allDaySlot={false}
-          slotMinTime="07:00:00"
-          slotMaxTime="22:00:00"
+          slotMinTime={isExtendedView ? "00:00:00" : "07:00:00"}
+          slotMaxTime={isExtendedView ? "24:00:00" : "21:00:00"}
           slotDuration="00:30:00"
           height="auto"
           events={events}

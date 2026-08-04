@@ -24,7 +24,6 @@ export async function getBatches(): Promise<{
     const { data: batches, error } = await supabase
       .from('batches')
       .select('*, textbook:textbooks(*), schedules:batch_schedules(*)')
-      .eq('is_active', true)
       .order('display_name', { ascending: true })
 
     if (error) {
@@ -56,7 +55,6 @@ export async function getBatchesWithStudentCount(): Promise<{
     const { data: batches, error: batchError } = await supabase
       .from('batches')
       .select('*, textbook:textbooks(*), schedules:batch_schedules(*)')
-      .eq('is_active', true)
       .order('display_name', { ascending: true })
 
     if (batchError) {
@@ -116,9 +114,8 @@ export async function checkTimeConflict(
     for (const schedule of schedules) {
       let query = supabase
         .from('batch_schedules')
-        .select('*, batch:batches!inner(is_active)')
+        .select('*')
         .eq('weekday', schedule.weekday)
-        .eq('batch.is_active', true)
 
       if (excludeBatchId) {
         query = query.neq('batch_id', excludeBatchId)
@@ -165,8 +162,7 @@ export async function createBatch(data: {
     const { data: batch, error } = await supabase
       .from('batches')
       .insert({
-        textbook_id: data.textbook_id,
-        is_active: true,
+        textbook_id: data.textbook_id
       })
       .select()
       .single()
@@ -267,10 +263,10 @@ export async function updateBatch(
 }
 
 // -----------------------------------------------------------------------------
-// Archive (soft delete)
+// Delete
 // -----------------------------------------------------------------------------
 
-export async function archiveBatch(
+export async function deleteBatch(
   id: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
@@ -278,7 +274,7 @@ export async function archiveBatch(
 
     const { error } = await supabase
       .from('batches')
-      .update({ is_active: false })
+      .delete()
       .eq('id', id)
 
     if (error) {
@@ -292,7 +288,7 @@ export async function archiveBatch(
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Failed to archive batch',
+      error: err instanceof Error ? err.message : 'Failed to delete batch',
     }
   }
 }
