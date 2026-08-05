@@ -45,3 +45,6 @@ ALTER TABLE attendance_records
     FOREIGN KEY (batch_id)
     REFERENCES batches(id)
     ON DELETE CASCADE;
+
+-- 7. Clean up existing batch display names (removes the " Batch X" suffix)
+UPDATE batches SET textbook_id = textbook_id;
