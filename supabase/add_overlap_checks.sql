@@ -12,7 +12,6 @@ BEGIN
       JOIN batches b ON b.id = bs.batch_id
      WHERE bs.weekday = NEW.weekday
        AND bs.id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::UUID)
-       AND b.is_active = true
        AND bs.start_time < NEW.end_time
        AND bs.end_time > NEW.start_time
   ) THEN
