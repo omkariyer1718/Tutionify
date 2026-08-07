@@ -9,6 +9,17 @@
   </p>
 </div>
 
+## 🎮 Live Demo Account
+
+Want to test drive the platform without creating an account or starting from a blank slate? You can log into our fully populated showcase account to see Tutionify in action:
+
+- **Email:** `dummy@tutionify.com`
+- **Password:** `dummyPassword`
+
+*(Note: Because of our strict multi-tenant architecture, anything you add or delete in this demo account stays isolated here and won't affect real users! Additionally, this demo environment automatically resets to a clean state every 24 hours.)*
+
+---
+
 ## 📌 About The Project
 
 Tutionify was built to solve a real-world problem: independent tutors and small tuition centers often rely on scattered notebooks, messy spreadsheets, and WhatsApp groups to manage their daily operations. 
