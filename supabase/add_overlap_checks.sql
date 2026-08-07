@@ -11,6 +11,7 @@ BEGIN
       FROM batch_schedules bs
       JOIN batches b ON b.id = bs.batch_id
      WHERE bs.weekday = NEW.weekday
+       AND bs.user_id = NEW.user_id
        AND bs.id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::UUID)
        AND bs.start_time < NEW.end_time
        AND bs.end_time > NEW.start_time
@@ -23,6 +24,7 @@ BEGIN
     SELECT 1
       FROM personal_slot_schedules ps
      WHERE ps.weekday = NEW.weekday
+       AND ps.user_id = NEW.user_id
        AND ps.id != COALESCE(NEW.id, '00000000-0000-0000-0000-000000000000'::UUID)
        AND ps.start_time < NEW.end_time
        AND ps.end_time > NEW.start_time
