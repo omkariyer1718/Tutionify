@@ -90,3 +90,12 @@ CREATE INDEX idx_textbooks_user_id ON textbooks(user_id);
 CREATE INDEX idx_batches_user_id ON batches(user_id);
 CREATE INDEX idx_students_user_id ON students(user_id);
 CREATE INDEX idx_settings_user_id ON settings(user_id);
+
+-- 6. Scope Unique Constraints to user_id
+-- The original schema had global unique constraints. Now that we are multi-tenant, 
+-- we must include user_id in these constraints so different users can have textbooks with the same name.
+ALTER TABLE textbooks DROP CONSTRAINT IF EXISTS textbooks_series_name_grade_key;
+ALTER TABLE textbooks ADD CONSTRAINT textbooks_user_id_series_name_grade_key UNIQUE (user_id, series_name, grade);
+
+ALTER TABLE students DROP CONSTRAINT IF EXISTS students_student_code_key;
+ALTER TABLE students ADD CONSTRAINT students_user_id_student_code_key UNIQUE (user_id, student_code);
