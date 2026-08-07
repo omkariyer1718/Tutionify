@@ -147,6 +147,15 @@ $function$ LANGUAGE plpgsql;
 -- 13. Execute it immediately once to initialize the data right now
 SELECT reset_demo_account();
 
--- 14. Unschedule if already exists, then schedule it to run every day at midnight (UTC)
-SELECT cron.unschedule('reset-demo-account-daily');
+-- 14. Schedule it to run every day at midnight (UTC)
+-- Safely unschedule if it exists
+DO $block$
+BEGIN
+  PERFORM cron.unschedule('reset-demo-account-daily');
+EXCEPTION
+  WHEN OTHERS THEN
+    -- Ignore if job doesn't exist yet
+END;
+$block$;
+
 SELECT cron.schedule('reset-demo-account-daily', '0 0 * * *', 'SELECT reset_demo_account()');
